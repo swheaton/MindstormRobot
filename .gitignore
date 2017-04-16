@@ -26,3 +26,6 @@ hs_err_pid*
 *.nxj
 .classpath
 .project
+
+# Project management
+*.xlsm

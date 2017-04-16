@@ -1,3 +1,4 @@
+package stuartw_at_umich_dot_edu.MindstormRobot;
 
 import lejos.nxt.Button;
 import lejos.nxt.LCD;

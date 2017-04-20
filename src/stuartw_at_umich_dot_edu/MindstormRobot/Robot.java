@@ -4,7 +4,9 @@ import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
+import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.navigation.Pose;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 
@@ -20,6 +22,8 @@ public class Robot {
 	private static DifferentialPilot pilot = new DifferentialPilot
 			(Constants.WHEEL_DIAMETER, Constants.TRACK_DIAMETER,
 					Constants.LEFT_MOTOR, Constants.RIGHT_MOTOR);
+	private static OdometryPoseProvider poseProvider =
+			new OdometryPoseProvider(pilot);
 	public static void main(String[] args)
 	{
 		// Bind the escape button to escape the program, so we can
@@ -33,11 +37,15 @@ public class Robot {
 		      // Nothing
 		   }
 		});
-
+		
+		System.out.println("Press a button to start");
 		Button.waitForAnyPress();
+		// Set robot to origin with 90 deg heading (along Y axis)
+		poseProvider.setPose(new Pose(0.0f, 0.0f, 90.0f));
+
 		// Add behaviors to the arbitrator so we can do stuff
-		MoveBehavior moveBehav = new MoveBehavior(pilot);
-		AvoidBehavior avoidBehav = new AvoidBehavior(pilot);
+		MoveBehavior moveBehav = new MoveBehavior(pilot, poseProvider);
+		AvoidBehavior avoidBehav = new AvoidBehavior(pilot, poseProvider);
 		Behavior [] behavArray = {moveBehav, avoidBehav};
 		Arbitrator arby = new Arbitrator(behavArray);
 		arby.start();

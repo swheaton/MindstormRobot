@@ -13,8 +13,8 @@ import lejos.robotics.subsumption.Behavior;
 public class Robot {
 	private static class Constants
 	{
-		static double WHEEL_DIAMETER = 56.0; // wheel diameter in mm
-		static double TRACK_DIAMETER = 112.0; // distance b/w wheels in mm
+		static double WHEEL_DIAMETER = 2.20472; // wheel diameter in in.
+		static double TRACK_DIAMETER = 4.40945; // distance b/w wheels in in.
 		static NXTRegulatedMotor LEFT_MOTOR = Motor.B;
 		static NXTRegulatedMotor RIGHT_MOTOR = Motor.A;
 	}
@@ -38,15 +38,19 @@ public class Robot {
 		   }
 		});
 		
-		System.out.println("Press a button to start");
-		Button.waitForAnyPress();
 		// Set robot to origin with 90 deg heading (along Y axis)
 		poseProvider.setPose(new Pose(0.0f, 0.0f, 90.0f));
 
 		// Add behaviors to the arbitrator so we can do stuff
 		MoveBehavior moveBehav = new MoveBehavior(pilot, poseProvider);
 		AvoidBehavior avoidBehav = new AvoidBehavior(pilot, poseProvider);
-		Behavior [] behavArray = {moveBehav, avoidBehav};
+		LineBehavior lineBehav = new LineBehavior(pilot, poseProvider);
+		lineBehav.calibrate();
+		
+		System.out.println("Press a button to start");
+		Button.waitForAnyPress();
+				
+		Behavior [] behavArray = {moveBehav, avoidBehav, lineBehav};
 		Arbitrator arby = new Arbitrator(behavArray);
 		arby.start();
 	}

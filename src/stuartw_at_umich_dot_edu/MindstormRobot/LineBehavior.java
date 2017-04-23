@@ -3,7 +3,6 @@ package stuartw_at_umich_dot_edu.MindstormRobot;
 import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
 import lejos.nxt.SensorPort;
-import lejos.nxt.Sound;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Behavior;
@@ -13,10 +12,11 @@ public class LineBehavior implements Behavior {
 	private LightSensor ls;
 	private DifferentialPilot pilot;
 	private OdometryPoseProvider poseProvider;
+	private boolean sensed;
 
 	LineBehavior(DifferentialPilot pilot, OdometryPoseProvider poseProvider)
 	{
-		ls = new LightSensor(SensorPort.S3);
+		ls = new LightSensor(SensorPort.S1);
 		this.pilot = pilot;
 		this.poseProvider = poseProvider;
 	}
@@ -24,17 +24,22 @@ public class LineBehavior implements Behavior {
 	public boolean takeControl() {
 		// Experience tells me 50 is a decent number to detect the tape line
 		int reading = ls.readValue();
-		System.out.println("read: " + reading);
-		return reading > 50;
+		//System.out.println("read: " + reading);
+		if (reading > 50)
+		{
+			sensed = true;
+		}
+		return sensed;
 	}
 
 	@Override
 	public void action() {
 		suppressed = false;
+		System.out.println("Found Line!");
 		
 		// First rotate to face initial direction
 		float heading = poseProvider.getPose().getHeading();
-		System.out.println("hdg: " + heading);
+		//System.out.println("hdg: " + heading);
 		pilot.rotate(90-heading, true);
 		while (pilot.isMoving() && !suppressed)
 		{

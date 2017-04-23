@@ -14,6 +14,7 @@ public class AvoidBehavior implements Behavior {
 	// True if behavior should be suppressed
 	private boolean suppressed = false;
 	private float currReading = 255.0f;
+	private boolean objectDetected = false;
 	private UltrasonicSensor us;
 	private FeatureDetector fd;
 	private DifferentialPilot pilot;
@@ -43,14 +44,15 @@ public class AvoidBehavior implements Behavior {
 			if (f.getRangeReading().getRange() <= Constants.DETECT_DISTANCE)
 			{
 				currReading = f.getRangeReading().getRange();
-				return true;
+				objectDetected = true;
 			}
 		}
-		System.out.println((int)poseProvider.getPose().getX() + "," + (int)poseProvider.getPose().getY());
-		return false;
+		//System.out.println((int)poseProvider.getPose().getX() + "," + (int)poseProvider.getPose().getY());
+		return objectDetected;
 	}
 	@Override
 	public void action() {
+		System.out.println("Avoid!");
 		suppressed = false;
 		double rotateAmount = -20.0;
 		Pose pose = poseProvider.getPose();
@@ -68,6 +70,7 @@ public class AvoidBehavior implements Behavior {
 		{
 			Thread.yield();
 		}
+		objectDetected = false;
 		pilot.stop();
 	}
 

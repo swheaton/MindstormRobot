@@ -56,7 +56,7 @@ public class AvoidBehavior implements Behavior {
 		suppressed = false;
 		double rotateAmount = -20.0;
 		Pose pose = poseProvider.getPose();
-		System.out.println(pose.getX() + "," + pose.getY());
+		//System.out.println(pose.getX() + "," + pose.getY());
 		if (pose.getX() > 0 || pose.getX() == 0.0f && Math.random() < 0.5)
 		{
 			rotateAmount *= -1;

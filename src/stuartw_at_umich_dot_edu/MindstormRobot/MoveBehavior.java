@@ -24,7 +24,6 @@ public class MoveBehavior implements Behavior {
 	}
 
 	// Move forward as the behavior
-	// TODO move toward goal line instead of always straight
 	@Override
 	public void action() {
 		suppressed = false;

@@ -43,6 +43,7 @@ public class Robot {
 
 		// Add behaviors to the arbitrator so we can do stuff
 		MoveBehavior moveBehav = new MoveBehavior(pilot, poseProvider);
+		CorrectiveBehavior correctiveBehav = new CorrectiveBehavior(pilot, poseProvider);
 		AvoidBehavior avoidBehav = new AvoidBehavior(pilot, poseProvider);
 		LineBehavior lineBehav = new LineBehavior(pilot, poseProvider);
 		lineBehav.calibrate();
@@ -50,7 +51,7 @@ public class Robot {
 		System.out.println("Press a button to start");
 		Button.waitForAnyPress();
 				
-		Behavior [] behavArray = {moveBehav, avoidBehav, lineBehav};
+		Behavior [] behavArray = {moveBehav, correctiveBehav, avoidBehav, lineBehav};
 		Arbitrator arby = new Arbitrator(behavArray);
 		arby.start();
 	}

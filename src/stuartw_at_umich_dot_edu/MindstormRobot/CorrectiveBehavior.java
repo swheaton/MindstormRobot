@@ -10,6 +10,7 @@ public class CorrectiveBehavior implements Behavior {
 	private boolean suppressed = false;
 	private DifferentialPilot pilot;
 	private OdometryPoseProvider poseProvider;
+	private boolean justTookControl = false;
 	
 	static float TOO_FAR_LATERALLY = 12.0f * 2.0f; // 24 inches
 	static float SMALL_ANGLE = 5.0f; // degrees
@@ -22,14 +23,19 @@ public class CorrectiveBehavior implements Behavior {
 
 	@Override
 	// Take control if we're getting too far to the side of the maze,
+	//	AND we didn't just take control. This allows us time to correct without
+	//	constantly taking control
 	public boolean takeControl() {
-		return Math.abs(poseProvider.getPose().getX()) > TOO_FAR_LATERALLY;
+		boolean tooFar = Math.abs(poseProvider.getPose().getX()) > TOO_FAR_LATERALLY;
+		justTookControl = tooFar ? justTookControl : false;
+		return tooFar && !justTookControl;
 	}
 
 	// Turn to face goal line, minus a few degrees
 	@Override
 	public void action() {
 		System.out.println("Correcting");
+		justTookControl = true;
 		suppressed = false;
 		float desiredHeading = 90.0f - poseProvider.getPose().getHeading();
 		//System.out.println("hdg: " + heading);

@@ -50,22 +50,31 @@ public class AvoidBehavior implements Behavior {
 		//System.out.println((int)poseProvider.getPose().getX() + "," + (int)poseProvider.getPose().getY());
 		return objectDetected;
 	}
+	
+	private double getRotateAmount()
+	{
+		double rotateAmount = -20.0;
+		Pose pose = poseProvider.getPose();
+		//System.out.println(pose.getX() + "," + pose.getY());
+		
+		// If should turn left:
+		//	- on the right side
+		//	- in the middle? flip a coin
+		if (pose.getX() > 0 ||
+				Math.abs(pose.getX()) < 0.0001f && Math.random() < 0.5)
+		{
+			rotateAmount *= -1;
+		}
+		
+		return rotateAmount;
+	}
+	
 	@Override
 	public void action() {
 		System.out.println("Avoid!");
 		suppressed = false;
-		double rotateAmount = -20.0;
-		Pose pose = poseProvider.getPose();
-		//System.out.println(pose.getX() + "," + pose.getY());
-		if (pose.getX() > 0 || pose.getX() == 0.0f && Math.random() < 0.5)
-		{
-			rotateAmount *= -1;
-		}
-		/*if (currReading <= Constants.SMALL_DETECT_DISTANCE)
-		{
-			//rotateAmount = -20.0;
-		}*/
-		pilot.rotate(rotateAmount, true);
+
+		pilot.rotate(getRotateAmount(), true);
 		while (pilot.isMoving() && !suppressed)
 		{
 			Thread.yield();

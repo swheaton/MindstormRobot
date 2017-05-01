@@ -1,7 +1,6 @@
 
 package stuartw_at_umich_dot_edu.MindstormRobot;
 
-import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Behavior;
 
@@ -9,12 +8,10 @@ public class MoveBehavior implements Behavior {
 	// True if behavior should be suppressed
 	private boolean suppressed = false;
 	private DifferentialPilot pilot;
-	private OdometryPoseProvider poseProvider;
 
-	MoveBehavior(DifferentialPilot pilot, OdometryPoseProvider poseProvider)
+	MoveBehavior(DifferentialPilot pilot)
 	{
 		this.pilot = pilot;
-		this.poseProvider = poseProvider;
 	}
 
 	@Override

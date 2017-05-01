@@ -13,7 +13,6 @@ import lejos.robotics.subsumption.Behavior;
 public class AvoidBehavior implements Behavior {
 	// True if behavior should be suppressed
 	private boolean suppressed = false;
-	private float currReading = 255.0f;
 	private boolean objectDetected = false;
 	private UltrasonicSensor us;
 	private FeatureDetector fd;
@@ -38,16 +37,15 @@ public class AvoidBehavior implements Behavior {
 
 	@Override
 	public boolean takeControl() {
+		// Start taking control when sensor sees an obstacle
 		Feature f = fd.scan();
 		if (f != null)
 		{
 			if (f.getRangeReading().getRange() <= Constants.DETECT_DISTANCE)
 			{
-				currReading = f.getRangeReading().getRange();
 				objectDetected = true;
 			}
 		}
-		//System.out.println((int)poseProvider.getPose().getX() + "," + (int)poseProvider.getPose().getY());
 		return objectDetected;
 	}
 	
@@ -55,7 +53,6 @@ public class AvoidBehavior implements Behavior {
 	{
 		double rotateAmount = -20.0;
 		Pose pose = poseProvider.getPose();
-		//System.out.println(pose.getX() + "," + pose.getY());
 		
 		// If should turn left:
 		//	- on the right side
@@ -74,6 +71,9 @@ public class AvoidBehavior implements Behavior {
 		System.out.println("Avoid!");
 		suppressed = false;
 
+		// Rotate the robot and hope it turns past the obstacle. If not, it
+		//	will sense it again and this loop continues until obstacle is
+		//	avoided.
 		pilot.rotate(getRotateAmount(), true);
 		while (pilot.isMoving() && !suppressed)
 		{

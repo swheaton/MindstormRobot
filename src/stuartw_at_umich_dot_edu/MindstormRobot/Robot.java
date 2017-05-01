@@ -42,10 +42,12 @@ public class Robot {
 		poseProvider.setPose(new Pose(0.0f, 0.0f, 90.0f));
 
 		// Add behaviors to the arbitrator so we can do stuff
-		MoveBehavior moveBehav = new MoveBehavior(pilot, poseProvider);
+		MoveBehavior moveBehav = new MoveBehavior(pilot);
 		CorrectiveBehavior correctiveBehav = new CorrectiveBehavior(pilot, poseProvider);
 		AvoidBehavior avoidBehav = new AvoidBehavior(pilot, poseProvider);
 		LineBehavior lineBehav = new LineBehavior(pilot, poseProvider);
+		
+		// Let's calibrate the light sensor before starting
 		lineBehav.calibrate();
 		
 		System.out.println("Press a button to start");
